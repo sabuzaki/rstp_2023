@@ -1,47 +1,114 @@
-PROGRAM EXECUTION
-Program to be executed within Ubuntu (22.04 current version) operating system. 
-It will be provided as a compressed folder with all the python code. It will have 
-an executable file install_prerequisites.py, which will install additional library 
-requirements to start an application. The application itself will be started by 
-executing file rstp_2023.py. Arguments can be provided to start an application 
-with number of virtual rstp bridges and how many port each of that bridge must 
-have: ./rstp_2023.py -b 15 -p 8. This command would start an application with 
-initialized 15 bridges, each having 15 ports. Additionally, application will 
-create one virtual network card rstp_hub_0. This network card later can be used for 
-connecting multiple bridges to it to simulate a hub connectivity. Within an 
-application, each virtual port will be called rstp_x_y; x stands for bridge 
-number and y for port number. As example rstp_5_7 means bridge 5 and port 7. 
-Port and bridge numbers are necessary to know as when using an application, it 
-will prompt to input a bridge or a port number. It is necessary to exit 
-application using the code 99, otherwise these multiple network cards will stay 
-within OS unused.
+# RSTP 2023 - Rapid Spanning Tree Protocol Simulator
 
-When started, it will display a CLI menu, when typed in a selection number, it 
-will prompt a short description of what the next steps are going to do. Program 
-will be waiting for an input from the user to select which bridge or port information 
-to be processed or displayed. If wrong selection is done, type in any letter and 
-it will bring back to the menu selection. Program will allow to modify all the RSTP 
-settings (timers, priorities, etc), connect any rstp virtual bridge to any other 
-rstp virtual bridge port or connect to actual existing network card. Depending on 
-the user environment, that network card can be connected to physical switch or some 
-other any network simulator. Because of that, custom RSTP topologies can be created, 
-such as number of rstp_2023 bridges interconnected between each other including one 
-two connectivities to external physical network cards.
+## 📦 Program Execution
 
-Application further has multiple pre-programmed topologies which can be loaded, 
-including an option to generate a random topology, which will ask used how many 
-randomly ports to interconnect. As example if each bridge has 8 ports, application 
-will prompt to enter number 1-4, if number 4 is selected, all ports will be connected 
-(or sometimes up to 90%, because of the algorithm). Application has an option to export 
-current topology as a graph code or image. The image is saved under application 
-current folder named rstp_graph.png. The graph code is presented as standard graphviz 
-library code and it can be copied and pasted to any website which supports graphviz 
-graph presentation. In this project it was used: http://magjac.com/graphviz-visual-editor/. 
-If modified any of the bridge parameters and required to refresh the graph, option 45 
-must be selected again, which would refresh the image (can be opened already).
+This program is designed to run on **Ubuntu 22.04**. It is distributed as a compressed folder containing all necessary Python files.
 
-Each graph displays a bridge with its number, its mac address and priority represented in 
-hex, a total cost towards root bridge, priority of each port, cost of each port, port 
-number and what is the role of the port. The active spanning tree non-designated links are 
-shown in bold, and alternate or backup links are dashed. Port role names are shortened: Des 
-(designated), Alt (alternate), Bac (backup), Roo (root).
+### 🔧 Setup
+
+To install required dependencies, run:
+
+```bash
+python3 install_prerequisites.py
+```
+
+### 🚀 Launch the Application
+
+Start the application using:
+
+```bash
+./rstp_2023.py -b 15 -p 8
+```
+
+This initializes:
+
+- **15 virtual bridges**
+- Each with **8 ports**
+- A virtual network card named `rstp_hub_0` (used to simulate hub connectivity between bridges)
+
+## 🔌 Virtual Ports
+
+Each virtual port is named in the format:
+
+```
+rstp_<bridge_number>_<port_number>
+```
+
+For example: `rstp_5_7` refers to bridge 5, port 7.
+
+> ⚠️ **Note:** Always exit the application by entering code `99` to ensure cleanup of created virtual network cards. Otherwise, unused interfaces will remain in the system.
+
+---
+
+## 🧭 CLI Menu Interface
+
+Upon startup, a **CLI menu** is displayed. Each option shows a short description of the action to be performed. Input prompts will request bridge and port numbers as needed.
+
+- Invalid selections can be dismissed by typing any letter to return to the main menu.
+- The user can:
+  - Modify RSTP settings (timers, priorities, etc.)
+  - Connect any virtual bridge to:
+    - Another bridge
+    - An actual network card (e.g., to connect to a physical switch or network simulator)
+
+This enables the creation of custom **RSTP topologies**.
+
+---
+
+## 🌐 Topology Options
+
+Features include:
+
+- **Pre-programmed topologies**
+- Option to **generate a random topology**
+
+Example: If each bridge has 8 ports, the user will be asked to select a number (1–4) to determine how many random connections are made. Selecting 4 attempts to connect all (or ~90%) of the ports using a randomized algorithm.
+
+---
+
+## 📈 Topology Visualization
+
+The application allows exporting the topology as:
+
+- A **Graphviz DOT code block**
+- A **PNG image** saved as `rstp_graph.png` in the current directory
+
+Graphviz code can be viewed using online tools such as:
+
+- [http://magjac.com/graphviz-visual-editor/](http://magjac.com/graphviz-visual-editor/)
+
+> To refresh the graph after modifying topology or bridge parameters, select option `45`.
+
+---
+
+## 📊 Graph Details
+
+Each node (bridge) in the graph displays:
+
+- Bridge number
+- MAC address and priority (in hex)
+- Total cost toward the root bridge
+
+Each port shows:
+
+- Port number
+- Port priority
+- Port cost
+- Port role
+
+### 🔄 Port Roles (Abbreviated):
+
+- `Des` – Designated
+- `Alt` – Alternate
+- `Bac` – Backup
+- `Roo` – Root
+
+**Bold lines** represent active spanning tree links.  
+**Dashed lines** represent alternate or backup links.
+
+---
+
+## 📌 Notes
+
+- Ensure you're running the application with appropriate privileges (some virtual networking may require `sudo`).
+- Use code `99` to exit cleanly and prevent lingering virtual interfaces.
